@@ -9,7 +9,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # 2. Comprobamos si es Debian y al menos versión 12
-if ! grep -qi "debian" /etc/os-release; then
+if ! grep -q "^ID=debian$" /etc/os-release; then
   echo "Este script solo puede ejecutarse en Debian."
   exit 1
 fi
