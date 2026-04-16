@@ -35,7 +35,18 @@ services:
       - n8n_data:/home/node/.n8n
       - $PWD/local_files:/files
 
+
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: always
+    expose:
+      - "8123"
+    volumes:
+      - ha_data:/config
+    environment:
+      - TZ=Europe/Madrid
 volumes:
   caddy_data:
   caddy_config:
   n8n_data:
+  ha_data:

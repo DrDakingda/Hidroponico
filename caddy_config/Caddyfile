@@ -11,3 +11,11 @@
 		-Server
 	}
 }
+ha.binden.es {
+        reverse_proxy homeassistant:8123 {
+                flush_interval -1
+        }
+        header {
+                -Server
+        }
+}
