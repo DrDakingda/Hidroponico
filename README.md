@@ -1,81 +1,38 @@
-# n8n con Docker y Caddy - by Raiola Networks 🚀
+# Hidroponico 🌱
 
-Este repositorio ha sido creado por [**Raiola Networks**](https://raiolanetworks.com) para desplegar [n8n](https://n8n.io/) de forma sencilla usando **Docker** y **Caddy** como servidor web y proxy inverso con certificados SSL automáticos vía Let's Encrypt.
+Proyecto personal de automatización de riego hidropónico usando software libre.
 
----
+## ¿Qué es esto?
 
-## 🚀 ¿Qué incluye este proyecto?
+Un sistema de riego automatizado que orquesta tres servicios mediante Docker:
 
-- Un contenedor de **n8n**, una potente herramienta de automatización de flujos de trabajo.
-- Un contenedor de **Caddy**, que gestiona automáticamente los certificados SSL.
-- Configuración preparada para producción.
-- Soporte para múltiples subdominios y dominios personalizados.
+- **N8N** — motor de automatización y flujos de trabajo
+- **Home Assistant** — control y monitorización del hardware (sensores, actuadores)
+- **Caddy** — proxy inverso con SSL automático
 
----
+## Próximas funcionalidades
 
-## 🛠️ ¿Cómo levantarlo?
+- 🌡️ **Sensor de temperatura del agua en tiempo real** — integración con Home Assistant para monitorizar la temperatura del depósito y activar o detener el riego según umbrales configurables
+- 🌤️ **API del tiempo** — consulta de previsión meteorológica para que el riego tenga en cuenta la lluvia esperada y la temperatura ambiente, evitando riegos innecesarios
 
-Tienes dos formas de levantar el proyecto:
+## Estructura del proyecto
 
----
-
-### 🔧 Opción 1: Instalación manual
-
-```bash
-git clone https://github.com/RaiolaNetworks/n8n-docker-caddy.git
-cd n8n-docker-caddy
-cp -a .env.sample .env
+```
+.
+├── docker-compose.yml        # Orquestación de contenedores
+├── caddy_config/
+│   └── Caddyfile             # Proxy inverso con SSL para n8n.binden.es y ha.binden.es
+├── .env                      # Variables de entorno (no incluido en el repo)
+└── .env.sample               # Plantilla de variables de entorno
 ```
 
-> ✍️ **IMPORTANTE:** Edita el archivo `.env` y ajusta las siguientes variables:
->
-> - `DOMAIN_NAME=` → tu dominio principal (ej. `ejemplo.com`)
-> - `SUBDOMAIN=` → subdominio donde se levantará n8n (ej. `n8n`)
-> - `SSL_EMAIL=` → tu correo electrónico para la generación del certificado SSL
+## Requisitos
 
-Una vez ajustado el `.env`, puedes levantar los contenedores con:
+- Docker y Docker Compose
+- Un dominio apuntando al servidor
+- Copiar `.env.sample` a `.env` y rellenar los valores
 
-```bash
-docker compose up -d
-```
+## Autor
 
----
+Proyecto de hobby personal en desarrollo activo.
 
-### 🤖 Opción 2: Instalación automática (solo Debian 12+)
-
-Hemos creado un script instalador para sistemas **Debian 12 o superior**, que:
-
-- Comprueba si eres root
-- Verifica la versión de Debian
-- Pide los datos del dominio, subdominio y correo
-- Instala Docker y sus dependencias
-- Clona este repositorio
-- Ajusta el `.env` automáticamente
-
-#### ✅ Para usar el instalador:
-
-```bash
-apt update && apt install -y lsb-release apt-transport-https ca-certificates curl
-wget -O install_debian.sh https://raiola.link/install_n8n-docker-caddy
-chmod +x install_debian.sh
-bash install_debian.sh
-```
-
-Una vez finalizado, simplemente accede a la carpeta e inicia los contenedores:
-
-```bash
-cd /root/n8n-docker-caddy
-docker compose up -d
-```
-
----
-
-## 📫 Soporte
-
-Si necesitas ayuda, puedes abrir una *issue* en este repositorio de GitHub y estaremos encantados de ayudarte.
-
----
-
-## 📜 Licencia
-
-Este proyecto está bajo licencia **MIT**. Puedes usarlo, modificarlo y distribuirlo libremente.
