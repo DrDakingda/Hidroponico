@@ -1,0 +1,32 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.16.0.0/12
+
+rest:
+  - resource: "https://api.open-meteo.com/v1/forecast?latitude=36.7213&longitude=-4.4214&current=temperature_2m,relative_humidity_2m,precipitation&timezone=Europe/Madrid"
+    scan_interval: 3600
+    sensor:
+      - name: "Temperatura Malaga"
+        value_template: "{{ value_json.current.temperature_2m }}"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      - name: "Humedad Malaga"
+        value_template: "{{ value_json.current.relative_humidity_2m }}"
+        unit_of_measurement: "%"
+        device_class: humidity
+      - name: "Lluvia Malaga"
+        value_template: "{{ value_json.current.precipitation }}"
+        unit_of_measurement: "mm"
+        device_class: precipitation
+

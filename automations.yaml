@@ -1,0 +1,89 @@
+- id: '1776365722855'
+  alias: Riego Hidropónico - Fase 1 Trasplante
+  description: Ciclos adaptativos según franja horaria y condiciones meteorológicas
+  triggers:
+  - trigger: time
+    at:
+      - "08:00"
+      - "08:30"
+      - "09:00"
+      - "09:30"
+      - "10:00"
+      - "10:30"
+      - "11:00"
+      - "11:30"
+      - "12:00"
+      - "12:30"
+      - "13:00"
+      - "13:30"
+      - "14:00"
+      - "14:45"
+      - "15:30"
+      - "16:15"
+      - "17:00"
+      - "17:45"
+      - "18:30"
+      - "19:15"
+      - "20:00"
+      - "22:00"
+      - "00:00"
+      - "02:00"
+      - "04:00"
+      - "06:00"
+  actions:
+  - choose:
+    - conditions:
+      - condition: time
+        after: "08:00:00"
+        before: "14:01:00"
+      sequence:
+      - condition: numeric_state
+        entity_id: sensor.humedad_malaga
+        below: 80
+      - variables:
+          minutos_riego: >
+            {% set temp = states('sensor.temperatura_malaga') | float(20) %}
+            {% if temp > 28 %}3{% elif temp < 18 %}1{% else %}2{% endif %}
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_on
+      - delay:
+          minutes: "{{ minutos_riego }}"
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_off
+    - conditions:
+      - condition: time
+        after: "14:00:00"
+        before: "20:01:00"
+      sequence:
+      - condition: numeric_state
+        entity_id: sensor.humedad_malaga
+        below: 80
+      - variables:
+          minutos_riego: >
+            {% set temp = states('sensor.temperatura_malaga') | float(20) %}
+            {% if temp > 28 %}3{% elif temp < 18 %}1{% else %}2{% endif %}
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_on
+      - delay:
+          minutes: "{{ minutos_riego }}"
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_off
+    - conditions:
+      - condition: time
+        after: "20:00:00"
+        before: "08:01:00"
+      sequence:
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_on
+      - delay:
+          minutes: 1
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_off
+  mode: single
+
