@@ -87,3 +87,66 @@
         action: switch.turn_off
   mode: single
 
+- id: 'alerta_sensor_tiempo_caido'
+  alias: Alerta - Sensor del tiempo no disponible
+  description: Notifica por email si los sensores de Open-Meteo dejan de responder
+  triggers:
+  - trigger: state
+    entity_id: sensor.temperatura_malaga
+    to: "unavailable"
+    for:
+      minutes: 30
+  - trigger: state
+    entity_id: sensor.temperatura_malaga
+    to: "unknown"
+    for:
+      minutes: 30
+  actions:
+  - action: notify.email_david
+    data:
+      title: "⚠️ Hidroponico - Sensor del tiempo caído"
+      message: >
+        El sensor de temperatura de Málaga lleva más de 30 minutos sin datos.
+        El riego seguirá funcionando con valores por defecto (2 minutos por ciclo).
+        Comprueba la conexión del servidor a Internet.
+  mode: single
+
+- id: 'alerta_enchufe_riego_caido'
+  alias: Alerta - Enchufe de riego no disponible
+  description: Notifica por email si el enchufe deja de responder
+  triggers:
+  - trigger: state
+    entity_id: switch.enchufe_riego_enchufe_1
+    to: "unavailable"
+    for:
+      minutes: 10
+  actions:
+  - action: notify.email_david
+    data:
+      title: "🚨 Hidroponico - Enchufe de riego caído"
+      message: >
+        El enchufe de riego lleva más de 10 minutos sin responder.
+        Las plantas NO están siendo regadas. Revisa el enchufe inteligente.
+  mode: single
+
+- id: 'resumen_diario_riego'
+  alias: Resumen diario del sistema de riego
+  description: Email diario a las 21:00 con el estado del sistema
+  triggers:
+  - trigger: time
+    at: "21:00"
+  actions:
+  - action: notify.email_david
+    data:
+      title: "🌱 Hidroponico - Resumen diario"
+      message: >
+        Estado del sistema a las 21:00:
+
+        🌡️ Temperatura Málaga: {{ states('sensor.temperatura_malaga') }}°C
+        💧 Humedad: {{ states('sensor.humedad_malaga') }}%
+        🌧️ Lluvia: {{ states('sensor.lluvia_malaga') }}mm
+        🔌 Enchufe riego: {{ states('switch.enchufe_riego_enchufe_1') }}
+
+        Sistema funcionando con normalidad.
+  mode: single
+

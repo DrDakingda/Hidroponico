@@ -13,6 +13,18 @@ http:
   trusted_proxies:
     - 172.16.0.0/12
 
+notify:
+  - name: email_david
+    platform: smtp
+    server: smtp.gmail.com
+    port: 587
+    starttls: true
+    sender: david02ponce@gmail.com
+    username: david02ponce@gmail.com
+    password: "ajoa vnzb yqth vrzm"
+    recipient:
+      - david02ponce@gmail.com
+
 rest:
   - resource: "https://api.open-meteo.com/v1/forecast?latitude=36.7213&longitude=-4.4214&current=temperature_2m,relative_humidity_2m,precipitation&timezone=Europe/Madrid"
     scan_interval: 3600
