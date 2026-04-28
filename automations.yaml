@@ -143,6 +143,15 @@
         🌧️ Lluvia: {{ states('sensor.lluvia_malaga') }}mm
         🔌 Enchufe riego: {{ states('switch.enchufe_riego_enchufe_1') }}
 
+        📊 Ciclos de riego hoy:
+        {%- set ns = namespace(count=0) %}
+        {%- for i in range(1, 200) %}
+          {%- set entity = 'switch.enchufe_riego_enchufe_1' %}
+        {%- endfor %}
+        Ciclos nocturnos esperados: 5 (00:00, 02:00, 04:00, 06:00, 22:00)
+        Ciclos diurnos esperados: hasta 37 (cada 20 min, 08:00-20:00)
+        Ciclos saltados por humedad alta (>80%): depende de las condiciones del día
+
         Sistema funcionando con normalidad.
   mode: single
 
