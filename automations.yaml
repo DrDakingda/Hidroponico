@@ -53,21 +53,31 @@
         after: "08:00:00"
         before: "20:01:00"
       sequence:
-      - condition: numeric_state
-        entity_id: sensor.humedad_malaga
-        below: 80
-      - variables:
-          minutos_riego: >
-            {% set temp = states('sensor.temperatura_malaga') | float(20) %}
-            {% if temp > 28 %}3{% elif temp < 18 %}1{% else %}2{% endif %}
-      - target:
-          entity_id: switch.enchufe_riego_enchufe_1
-        action: switch.turn_on
-      - delay:
-          minutes: "{{ minutos_riego }}"
-      - target:
-          entity_id: switch.enchufe_riego_enchufe_1
-        action: switch.turn_off
+      - choose:
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.humedad_malaga
+            above: 79
+          sequence:
+          - action: input_number.increment
+            target:
+              entity_id: input_number.ciclos_saltados_hoy
+        default:
+        - variables:
+            minutos_riego: >
+              {% set temp = states('sensor.temperatura_malaga') | float(20) %}
+              {% if temp > 28 %}3{% elif temp < 18 %}1{% else %}2{% endif %}
+        - target:
+            entity_id: switch.enchufe_riego_enchufe_1
+          action: switch.turn_on
+        - delay:
+            minutes: "{{ minutos_riego }}"
+        - target:
+            entity_id: switch.enchufe_riego_enchufe_1
+          action: switch.turn_off
+        - action: input_number.increment
+          target:
+            entity_id: input_number.ciclos_riego_hoy
     - conditions:
       - condition: time
         after: "20:00:00"
@@ -81,11 +91,31 @@
       - target:
           entity_id: switch.enchufe_riego_enchufe_1
         action: switch.turn_off
+      - action: input_number.increment
+        target:
+          entity_id: input_number.ciclos_riego_hoy
+  mode: single
+
+- id: 'reset_contadores_riego'
+  alias: Reset contadores de riego a medianoche
+  triggers:
+  - trigger: time
+    at: "00:01"
+  actions:
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.ciclos_riego_hoy
+    data:
+      value: 0
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.ciclos_saltados_hoy
+    data:
+      value: 0
   mode: single
 
 - id: 'alerta_sensor_tiempo_caido'
   alias: Alerta - Sensor del tiempo no disponible
-  description: Notifica por email si los sensores de Open-Meteo dejan de responder
   triggers:
   - trigger: state
     entity_id: sensor.temperatura_malaga
@@ -100,16 +130,14 @@
   actions:
   - action: notify.email_david
     data:
-      title: "⚠️ Hidroponico - Sensor del tiempo caído"
+      title: "Hidroponico - Sensor del tiempo caido"
       message: >
         El sensor de temperatura de Málaga lleva más de 30 minutos sin datos.
         El riego seguirá funcionando con valores por defecto (2 minutos por ciclo).
-        Comprueba la conexión del servidor a Internet.
   mode: single
 
 - id: 'alerta_enchufe_riego_caido'
   alias: Alerta - Enchufe de riego no disponible
-  description: Notifica por email si el enchufe deja de responder
   triggers:
   - trigger: state
     entity_id: switch.enchufe_riego_enchufe_1
@@ -119,7 +147,7 @@
   actions:
   - action: notify.email_david
     data:
-      title: "🚨 Hidroponico - Enchufe de riego caído"
+      title: "Hidroponico - Enchufe de riego caido"
       message: >
         El enchufe de riego lleva más de 10 minutos sin responder.
         Las plantas NO están siendo regadas. Revisa el enchufe inteligente.
@@ -127,31 +155,23 @@
 
 - id: 'resumen_diario_riego'
   alias: Resumen diario del sistema de riego
-  description: Email diario a las 21:00 con el estado del sistema
   triggers:
   - trigger: time
     at: "21:00"
   actions:
   - action: notify.email_david
     data:
-      title: "🌱 Hidroponico - Resumen diario"
+      title: "Hidroponico - Resumen diario"
       message: >
         Estado del sistema a las 21:00:
 
-        🌡️ Temperatura Málaga: {{ states('sensor.temperatura_malaga') }}°C
-        💧 Humedad: {{ states('sensor.humedad_malaga') }}%
-        🌧️ Lluvia: {{ states('sensor.lluvia_malaga') }}mm
-        🔌 Enchufe riego: {{ states('switch.enchufe_riego_enchufe_1') }}
+        Temperatura: {{ states('sensor.temperatura_malaga') }}C
+        Humedad: {{ states('sensor.humedad_malaga') }}%
+        Lluvia: {{ states('sensor.lluvia_malaga') }}mm
+        Enchufe riego: {{ states('switch.enchufe_riego_enchufe_1') }}
 
-        📊 Ciclos de riego hoy:
-        {%- set ns = namespace(count=0) %}
-        {%- for i in range(1, 200) %}
-          {%- set entity = 'switch.enchufe_riego_enchufe_1' %}
-        {%- endfor %}
-        Ciclos nocturnos esperados: 5 (00:00, 02:00, 04:00, 06:00, 22:00)
-        Ciclos diurnos esperados: hasta 37 (cada 20 min, 08:00-20:00)
-        Ciclos saltados por humedad alta (>80%): depende de las condiciones del día
-
-        Sistema funcionando con normalidad.
+        Ciclos de riego hoy:
+        Ejecutados: {{ states('input_number.ciclos_riego_hoy') | int }}
+        Saltados por humedad alta: {{ states('input_number.ciclos_saltados_hoy') | int }}
+        Total disparadores: {{ (states('input_number.ciclos_riego_hoy') | int) + (states('input_number.ciclos_saltados_hoy') | int) }}
   mode: single
-

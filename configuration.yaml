@@ -13,6 +13,20 @@ http:
   trusted_proxies:
     - 172.16.0.0/12
 
+input_number:
+  ciclos_riego_hoy:
+    name: Ciclos de riego ejecutados hoy
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  ciclos_saltados_hoy:
+    name: Ciclos saltados por humedad hoy
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+
 notify:
   - name: email_david
     platform: smtp
@@ -41,4 +55,3 @@ rest:
         value_template: "{{ value_json.current.precipitation }}"
         unit_of_measurement: "mm"
         device_class: precipitation
-
