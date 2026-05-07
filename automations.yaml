@@ -57,7 +57,7 @@
         - conditions:
           - condition: numeric_state
             entity_id: sensor.humedad_malaga
-            above: 79
+            above: 89
           sequence:
           - action: input_number.increment
             target:
