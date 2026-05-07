@@ -1,6 +1,6 @@
 - id: '1776365722855'
   alias: Riego Hidropónico - Fase 1 Trasplante
-  description: Ciclos adaptativos según franja horaria y condiciones meteorológicas
+  description: Ciclos adaptativos según temperatura y humedad, nunca se salta
   triggers:
   - trigger: time
     at:
@@ -53,31 +53,26 @@
         after: "08:00:00"
         before: "20:01:00"
       sequence:
-      - choose:
-        - conditions:
-          - condition: numeric_state
-            entity_id: sensor.humedad_malaga
-            above: 89
-          sequence:
-          - action: input_number.increment
-            target:
-              entity_id: input_number.ciclos_saltados_hoy
-        default:
-        - variables:
-            minutos_riego: >
-              {% set temp = states('sensor.temperatura_malaga') | float(20) %}
-              {% if temp > 28 %}3{% elif temp < 18 %}1{% else %}2{% endif %}
-        - target:
-            entity_id: switch.enchufe_riego_enchufe_1
-          action: switch.turn_on
-        - delay:
-            minutes: "{{ minutos_riego }}"
-        - target:
-            entity_id: switch.enchufe_riego_enchufe_1
-          action: switch.turn_off
-        - action: input_number.increment
-          target:
-            entity_id: input_number.ciclos_riego_hoy
+      - variables:
+          minutos_riego: >
+            {% set temp = states('sensor.temperatura_malaga') | float(20) %}
+            {% set hum = states('sensor.humedad_malaga') | float(60) %}
+            {% if temp > 32 %}4
+            {% elif temp > 28 %}3
+            {% elif temp >= 18 and hum < 50 %}3
+            {% else %}2
+            {% endif %}
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_on
+      - delay:
+          minutes: "{{ minutos_riego }}"
+      - target:
+          entity_id: switch.enchufe_riego_enchufe_1
+        action: switch.turn_off
+      - action: input_number.increment
+        target:
+          entity_id: input_number.ciclos_riego_hoy
     - conditions:
       - condition: time
         after: "20:00:00"
