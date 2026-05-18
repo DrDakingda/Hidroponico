@@ -45,8 +45,24 @@ services:
       - ha_data:/config
     environment:
       - TZ=Europe/Madrid
+
+  esphome:
+    image: esphome/esphome:latest
+    restart: always
+    expose:
+      - "6052"
+    volumes:
+      - esphome_data:/config
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=Europe/Madrid
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM0:/dev/ttyACM0
+
 volumes:
   caddy_data:
   caddy_config:
   n8n_data:
   ha_data:
+  esphome_data:

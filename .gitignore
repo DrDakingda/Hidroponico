@@ -2,6 +2,8 @@
 .env
 .env.*
 !.env.example
+secrets.yaml
+!secrets.yaml.example
 
 # Datos de volúmenes y runtime
 n8n_data/
