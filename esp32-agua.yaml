@@ -1,0 +1,32 @@
+﻿esphome:
+  name: esp32-agua
+  friendly_name: "Sensor Temperatura Agua"
+
+esp32:
+  board: esp32doit-devkit-v1
+  framework:
+    type: arduino
+
+wifi:
+  ssid: "DIGIFIBRA-R26s"
+  password: "7RG462GuN5ZA"
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+one_wire:
+  - platform: gpio
+    pin: GPIO4
+    id: onewire_bus
+
+sensor:
+  - platform: dallas_temp
+    one_wire_id: onewire_bus
+    index: 0
+    name: "Temperatura Agua"
+    accuracy_decimals: 2
+    update_interval: 300s
