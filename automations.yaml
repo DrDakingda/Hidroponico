@@ -12,7 +12,9 @@
   - variables:
       temp: "{{ states('sensor.temperatura_malaga') | float(20) }}"
       minutos_riego: >
-        {% if temp > 28 %}3
+        {% if temp > 35 %}6
+        {% elif temp > 32 %}5
+        {% elif temp > 28 %}4
         {% elif temp >= 18 %}2
         {% else %}1
         {% endif %}
