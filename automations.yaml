@@ -10,7 +10,7 @@
     entity_id: switch.enchufe_riego_enchufe_1
     state: "off"
   - variables:
-      temp: "{{ states('sensor.temperatura_malaga') | float(20) }}"
+      temp: "{{ states('sensor.temperatura_malaga') | float(28) }}"
       minutos_riego: >
         {% if temp > 35 %}6
         {% elif temp > 32 %}5
