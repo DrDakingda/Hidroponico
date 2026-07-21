@@ -20,14 +20,6 @@ Sistema de riego automatizado para una torre hidropónica vertical con goteo des
 - **Home Assistant** — control y monitorización del hardware
 - **Caddy** — proxy inverso con SSL automático
 
-## Plantas actuales
-
-- 4 pepinos
-- 8 tomates cherry
-- 2 berenjenas negras
-- 6 tomates castellanos
-- 2 lechugas
-- Hierbabuenas (en incorporación)
 
 ## Sistema físico
 
@@ -96,7 +88,7 @@ Consulta Open-Meteo cada hora con datos de Málaga:
 
 **El tomate es el cultivo estrella de la torre**, pero requiere control:
 - El crecimiento vertical se descontroló → necesitamos **poda fuerte y regular**
-- Usar exclusivamente **variedades cherry** (más adaptas a hidroponía vertical)
+- Usar exclusivamente **variedades cherry** (más adaptas a hidroponía vertical y quye no pesan tanto)
 - Implementar sistema de sujeción/tutorizado para las ramas pesadas
 
 #### Mejoras para Próximo Ciclo
