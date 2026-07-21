@@ -27,17 +27,17 @@ input_number:
     step: 1
     mode: box
 
-notify:
-  - name: email_david
-    platform: smtp
-    server: smtp.gmail.com
-    port: 587
-    starttls: true
-    sender: !secret gmail_user
-    username: !secret gmail_user
-    password: !secret gmail_password
-    recipient:
-      - !secret gmail_user
+#notify:
+#  - name: email_david
+#    platform: smtp
+#    server: smtp.gmail.com
+#    port: 587
+#    starttls: true
+#    sender: !secret gmail_user
+#    username: !secret gmail_user
+#    password: !secret gmail_password
+#    recipient:
+#      - !secret gmail_user
 
 rest:
   - resource: "https://api.open-meteo.com/v1/forecast?latitude=36.7213&longitude=-4.4214&current=temperature_2m,relative_humidity_2m,precipitation&timezone=Europe/Madrid"
