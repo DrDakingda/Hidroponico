@@ -2,6 +2,16 @@
 
 Proyecto personal de automatización de riego hidropónico usando software libre.
 
+## 📊 Estado Actual
+
+**Sistema pausado** desde 21/07/2026 tras completar ciclo de cultivo.
+- Docker: ✅ Parado (`docker compose down`)
+- Notificaciones: 🔇 Deshabilitadas
+- Hardware: ⚡ Desenchufado
+- Datos: 💾 Preservados
+
+Ver [CICLO_RESUMEN.md](CICLO_RESUMEN.md) para instrucciones de reactivación.
+
 ## ¿Qué es esto?
 
 Sistema de riego automatizado para una torre hidropónica vertical con goteo desde arriba y retorno al depósito. Orquesta tres servicios mediante Docker:
@@ -71,9 +81,39 @@ Consulta Open-Meteo cada hora con datos de Málaga:
 - Dominio apuntando al servidor
 - Copiar `.env.sample` a `.env` y rellenar los valores
 
-## Próximas funcionalidades
+## Historial de Ciclos
 
-- Sensor de temperatura del agua en tiempo real (ESP32 + ESPHome)
+### Ciclo 1 (Finalizado 21/07/2026)
+
+#### Resultados
+- ✅ **Tomates** — Mejor desempeño, producción abundante pero **se descontroló en crecimiento**
+- ⚠️ **Pepinos** — Crecimiento moderado, producción limitada
+- ⚠️ **Berenjenas** — Bajo desempeño, crecimiento lento
+- ⚠️ **Lechugas** — Consumidas temprano en el ciclo
+- ⚠️ **Hierbabuenas** — En incorporación, sin resultados concluyentes
+
+#### Lecciones Aprendidas
+
+**El tomate es el cultivo estrella de la torre**, pero requiere control:
+- El crecimiento vertical se descontroló → necesitamos **poda fuerte y regular**
+- Usar exclusivamente **variedades cherry** (más adaptas a hidroponía vertical)
+- Implementar sistema de sujeción/tutorizado para las ramas pesadas
+
+#### Mejoras para Próximo Ciclo
+- ✂️ Poda agresiva desde semana 2
+- 🍅 Cambiar a **solo tomate cherry** como cultivo principal
+- 🔗 Añadir tutores/malla para soporte
+- 🌡️ Sensor de temperatura del agua (ESP32 + ESPHome) — ya implementado, pendiente de test
+- 🛢️ Sensor de nivel del depósito con alerta y parada automática
+
+## Funcionalidades Implementadas
+
+### Hardware
+- **ESP32 + ESPHome** — Listo para sensor de temperatura del agua (config: `esp32_temperatura.yaml`)
+- **Sensor de humedad/temperatura ambiental** — Datos de Open-Meteo
+
+### Próximas Funcionalidades
+- Integración activa del sensor ESP32 en el depósito
 - Sensor de nivel del depósito con alerta por email y parada automática de la bomba
 
 ## Créditos
